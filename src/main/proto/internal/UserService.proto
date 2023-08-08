@@ -18,5 +18,7 @@ import "internal/response/UserListResponse.proto";
 service UserService{
   rpc getUserById(UserByIdsRequest) returns (UserListResponse){}
   rpc getAllUser(google.protobuf.Empty) returns(UserListResponse){}
+  rpc existUserByUsername() returns {}
+  rpc getUserByUsername() returns (UserListResponse) {}
 }
 

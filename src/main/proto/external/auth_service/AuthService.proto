@@ -20,9 +20,19 @@ import "external/auth_service/response/ValidateTokenResponse.proto";
 
 
 service AuthService{
+    // TODO userService Получение данных юзера, по username для зашивки в токен
     rpc signIn(SignInRequest) returns (TokenResponse) {}
+
+
+    // TODO userService Отправка данных о новой регистрации в userService, для сохранения
     rpc signUp(SignUpRequest) returns (google.protobuf.Empty){}
+
+    // TODO revoke  user token
     rpc logout(google.protobuf.Empty) returns(google.protobuf.Empty){}
+
+    // TODO обновить access по refresh токену
     rpc refreshToken(TokenRequest) returns (TokenResponse) {}
+
+    // TODO userService Проверка на существовавание юзера, если это не авторизация
     rpc validateToken(TokenRequest) returns (ValidateTokenResponse) {}
 }
