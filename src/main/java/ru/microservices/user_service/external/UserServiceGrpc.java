@@ -1,9 +1,12 @@
 package ru.microservices.user_service.external;
 
 import com.google.protobuf.Empty;
+import io.grpc.ServerInterceptor;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
+import org.lognet.springboot.grpc.GRpcGlobalInterceptor;
 import org.lognet.springboot.grpc.GRpcService;
+import org.lognet.springboot.grpc.security.SecurityInterceptor;
 import ru.microservices.proto.UserByIdsRequest;
 import ru.microservices.proto.UserListResponse;
 import ru.microservices.user_service.internal.mapper.UserMapper;
@@ -27,6 +30,7 @@ public class UserServiceGrpc extends ru.microservices.proto.UserServiceGrpc.User
                         )
                 )
         );
+
     }
 
     @Override

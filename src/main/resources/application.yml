@@ -1,0 +1,31 @@
+spring:
+  main:
+    banner-mode: "off"
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_service
+    username: postgres
+    password: test
+
+
+server:
+  port: 8081
+
+instance:
+  key: localization-service
+  id: 1
+
+grpc:
+  enable-reflection: true
+  port: 9091
+  security:
+    auth:
+      enabled: true
+
+
+
+
+

@@ -1,7 +1,10 @@
 package ru.microservices.user_service.internal.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -25,7 +28,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(nullable = false, name = "user_id"),
+            inverseJoinColumns = @JoinColumn(nullable = false, name = "role_id"))
     @JoinColumn(nullable = false)
     private List<Role> roles = new ArrayList<>();
 
