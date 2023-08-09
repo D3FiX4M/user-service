@@ -13,11 +13,11 @@ import "internal/request/CreateUserRequest.proto";
 import "internal/request/GetUserByIdRequest.proto";
 import "internal/request/GetUserByIdsRequest.proto";
 import "internal/request/UserByUsernameRequest.proto";
-
+import "internal/request/ValidateRequest.proto";
 // RESPONSES
 import "internal/response/UserResponse.proto";
 import "internal/response/UsersResponse.proto";
-import "internal/response/ExistResponse.proto";
+import "internal/response/ValidateResponse.proto";
 
 
 service UserService{
@@ -25,7 +25,7 @@ service UserService{
   rpc getById(GetUserByIdRequest) returns (UserResponse){}
   rpc getByIds(GetUserByIdsRequest) returns (UsersResponse){}
   rpc getAllUser(google.protobuf.Empty) returns(UsersResponse){}
-  rpc existUserByUsername(UserByUsernameRequest) returns (ExistResponse){}
+  rpc validateUser(ValidateRequest) returns (ValidateResponse){}
   rpc getUserByUsername(UserByUsernameRequest) returns (UserResponse) {}
 }
 

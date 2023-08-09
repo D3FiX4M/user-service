@@ -55,10 +55,11 @@ public class UserService implements UserDetailsService {
         return repository.findAll();
     }
 
-
-    public Boolean existByUsername(String username) {
-        return repository.existsByUsername(username);
+    public Boolean validateUser(String username, String password) {
+        User user = loadUserByUsername(username);
+        return passwordEncoder.matches(password, user.getPassword());
     }
+
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {

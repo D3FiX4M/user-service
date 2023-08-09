@@ -65,11 +65,11 @@ public class UserServiceGrpc extends ru.microservices.proto.UserServiceGrpc.User
     }
 
     @Override
-    public void existUserByUsername(UserByUsernameRequest request, StreamObserver<ExistResponse> responseObserver) {
+    public void getUserByUsername(UserByUsernameRequest request, StreamObserver<UserResponse> responseObserver) {
         StreamObserverUtils.actionValue(
                 responseObserver,
-                () -> mapper.toExistResponse(
-                        service.existByUsername(
+                () -> mapper.toUserResponse(
+                        service.loadUserByUsername(
                                 request.getUsername()
                         )
                 )
@@ -77,12 +77,13 @@ public class UserServiceGrpc extends ru.microservices.proto.UserServiceGrpc.User
     }
 
     @Override
-    public void getUserByUsername(UserByUsernameRequest request, StreamObserver<UserResponse> responseObserver) {
+    public void validateUser(ValidateRequest request, StreamObserver<ValidateResponse> responseObserver) {
         StreamObserverUtils.actionValue(
                 responseObserver,
-                () -> mapper.toUserResponse(
-                        service.loadUserByUsername(
-                                request.getUsername()
+                () -> mapper.toValidateResponse(
+                        service.validateUser(
+                                request.getUsername(),
+                                request.getPassword()
                         )
                 )
         );

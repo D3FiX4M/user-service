@@ -2,10 +2,10 @@ package ru.microservices.user_service.internal.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.microservices.proto.ExistResponse;
 import ru.microservices.proto.UserModel;
 import ru.microservices.proto.UserResponse;
 import ru.microservices.proto.UsersResponse;
+import ru.microservices.proto.ValidateResponse;
 import ru.microservices.user_service.internal.entity.User;
 
 import java.util.List;
@@ -46,9 +46,9 @@ public class UserMapper {
                 .build();
     }
 
-    public ExistResponse toExistResponse(Boolean value) {
-        return ExistResponse.newBuilder()
-                .setExist(value)
+    public ValidateResponse toValidateResponse(Boolean value) {
+        return ValidateResponse.newBuilder()
+                .setValue(value)
                 .build();
     }
 }

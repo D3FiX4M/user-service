@@ -4,6 +4,6 @@ option java_package = "ru.microservices.proto";
 option java_multiple_files = true;
 
 
-message ExistResponse{
-  bool exist = 1;
+message ValidateResponse{
+  bool value = 1;
 }
