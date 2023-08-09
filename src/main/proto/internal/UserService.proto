@@ -9,16 +9,21 @@ import "google/protobuf/empty.proto";
 
 
 // REQUESTS
-import "internal/request/UserByIdsRequest.proto";
+import "internal/request/GetUserByIdRequest.proto";
+import "internal/request/GetUserByIdsRequest.proto";
+import "internal/request/UserByUsernameRequest.proto";
 
 // RESPONSES
-import "internal/response/UserListResponse.proto";
+import "internal/response/UserResponse.proto";
+import "internal/response/UsersResponse.proto";
+import "internal/response/ExistResponse.proto";
 
 
 service UserService{
-  rpc getUserById(UserByIdsRequest) returns (UserListResponse){}
-  rpc getAllUser(google.protobuf.Empty) returns(UserListResponse){}
-  rpc existUserByUsername() returns {}
-  rpc getUserByUsername() returns (UserListResponse) {}
+  rpc getById(GetUserByIdRequest) returns (UserResponse){}
+  rpc getByIds(GetUserByIdsRequest) returns (UsersResponse){}
+  rpc getAllUser(google.protobuf.Empty) returns(UsersResponse){}
+  rpc existUserByUsername(UserByUsernameRequest) returns (ExistResponse){}
+  rpc getUserByUsername(UserByUsernameRequest) returns (UserResponse) {}
 }
 

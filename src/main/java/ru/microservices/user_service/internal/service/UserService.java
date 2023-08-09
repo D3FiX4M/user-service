@@ -19,12 +19,24 @@ public class UserService implements UserDetailsService {
     private final UserRepository repository;
 
 
-    public List<User> get(Collection<Long> ids) {
+    public User getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(
+                        () -> ExtendedException.of(ExtendedError.NOT_FOUND)
+                );
+    }
+
+    public List<User> getByIds(Collection<Long> ids) {
         return repository.findAllById(ids);
     }
 
     public List<User> getAll() {
         return repository.findAll();
+    }
+
+
+    public Boolean existByUsername(String username){
+        return repository.existsByUsername(username);
     }
 
     @Override
