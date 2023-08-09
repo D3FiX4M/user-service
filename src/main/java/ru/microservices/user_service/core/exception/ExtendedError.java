@@ -14,7 +14,8 @@ public enum ExtendedError {
     UNKNOWN(Status.INTERNAL, HttpStatus.INTERNAL_SERVER_ERROR),
     NOT_FOUND(Status.NOT_FOUND, HttpStatus.NOT_FOUND),
     BAD_REQUEST(Status.INVALID_ARGUMENT, HttpStatus.BAD_REQUEST),
-    PARSER_ERROR(Status.INVALID_ARGUMENT, HttpStatus.BAD_REQUEST);
+    PARSER_ERROR(Status.INVALID_ARGUMENT, HttpStatus.BAD_REQUEST),
+    ALREADY_EXIST(Status.ALREADY_EXISTS, HttpStatus.CONFLICT);
 
 
     private final Status grpcStatus;

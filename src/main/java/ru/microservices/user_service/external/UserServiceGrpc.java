@@ -16,6 +16,20 @@ public class UserServiceGrpc extends ru.microservices.proto.UserServiceGrpc.User
     private final UserService service;
     private final UserMapper mapper;
 
+
+    @Override
+    public void create(CreateUserRequest request, StreamObserver<UserResponse> responseObserver) {
+        StreamObserverUtils.actionValue(
+                responseObserver,
+                () -> mapper.toUserResponse(
+                        service.create(
+                                request.getUsername(),
+                                request.getPassword()
+                        )
+                )
+        );
+    }
+
     @Override
     public void getById(GetUserByIdRequest request, StreamObserver<UserResponse> responseObserver) {
         StreamObserverUtils.actionValue(

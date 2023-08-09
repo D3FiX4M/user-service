@@ -6,6 +6,8 @@ import org.lognet.springboot.grpc.security.GrpcSecurityConfigurerAdapter;
 import org.lognet.springboot.grpc.security.jwt.JwtAuthProviderFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
@@ -17,6 +19,12 @@ public class SecurityConfig extends GrpcSecurityConfigurerAdapter {
 
 
     private static final String jwtSecret = "702ECF979164043FF68BD276F95409E6DC10167123D967F0AB78FA8DBCA02062";
+
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public JwtDecoder jwtDecoder() {
