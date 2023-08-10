@@ -8,19 +8,19 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/user_service
     username: postgres
-    password: test
+    password: admin
 
 
 server:
-  port: 8081
+  port: 8082
 
 instance:
-  key: localization-service
+  key: user-service
   id: 1
 
 grpc:
   enable-reflection: true
-  port: 9091
+  port: 9092
   security:
     auth:
       enabled: true

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.grpc.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lognet.springboot.grpc.GRpcGlobalInterceptor;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.microservices.user_service.core.config.internal.InstanceConfig;
@@ -15,6 +16,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@GRpcGlobalInterceptor
 public class GrpcExceptionHandler implements ServerInterceptor {
     private final InstanceConfig instanceConfig;
     private final ObjectMapper objectMapper;

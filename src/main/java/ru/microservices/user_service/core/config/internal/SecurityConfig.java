@@ -6,10 +6,9 @@ import org.lognet.springboot.grpc.security.GrpcSecurityConfigurerAdapter;
 import org.lognet.springboot.grpc.security.jwt.JwtAuthProviderFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import ru.microservices.proto.UserServiceGrpc;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -31,7 +30,7 @@ public class SecurityConfig extends GrpcSecurityConfigurerAdapter {
     public void configure(GrpcSecurity builder) throws Exception {
         builder
                 .authorizeRequests()
-                .anyMethod()
+                .anyMethodExcluding(UserServiceGrpc.getCreateMethod(), UserServiceGrpc.getGetUserByUsernameMethod(), UserServiceGrpc.getValidateUserMethod())
                 .authenticated()
                 .and()
                 .authenticationProvider(JwtAuthProviderFactory.forAuthorities(jwtDecoder()));
