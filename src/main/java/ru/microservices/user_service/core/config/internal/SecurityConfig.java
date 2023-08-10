@@ -20,12 +20,6 @@ public class SecurityConfig extends GrpcSecurityConfigurerAdapter {
 
     private static final String jwtSecret = "702ECF979164043FF68BD276F95409E6DC10167123D967F0AB78FA8DBCA02062";
 
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
     @Bean
     public JwtDecoder jwtDecoder() {
         var key = jwtSecret.getBytes();

@@ -3,6 +3,7 @@ package ru.microservices.user_service.internal.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.microservices.proto.ERoleKey;
@@ -21,7 +22,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository repository;
     private final RoleService roleService;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public User create(String username, String password) {
         if (repository.existsByUsername(username)) {
