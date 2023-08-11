@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lognet.springboot.grpc.GRpcGlobalInterceptor;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.microservices.user_service.core.config.internal.InstanceConfig;
+import ru.microservices.user_service.core.config.InstanceConfig;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
