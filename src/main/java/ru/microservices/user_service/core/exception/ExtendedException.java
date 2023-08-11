@@ -1,52 +1,29 @@
 package ru.microservices.user_service.core.exception;
 
+import io.grpc.StatusRuntimeException;
 import lombok.Getter;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
 
 @Getter
 public class ExtendedException extends RuntimeException {
     private final ExtendedError error;
-    private final Map<String, String> data = new HashMap<>();
 
-    private ExtendedException(
-            ExtendedError error,
-            Map<String, String> data
-    ) {
-        this.error = error != null ? error : ExtendedError.UNKNOWN;
-
-        if (data != null && !data.isEmpty()) {
-            this.data.putAll(data);
-        }
+    public ExtendedException(ExtendedError error) {
+        super();
+        this.error = error;
     }
+
 
     public static ExtendedException of(ExtendedError error) {
-        return new ExtendedException(
-                error,
-                Collections.emptyMap()
-        );
+        return new ExtendedException(error);
     }
 
-    public static ExtendedException of(
-            ExtendedError error,
-            Map<String, String> data
-    ) {
-        return new ExtendedException(
-                error,
-                data
-        );
-    }
-
-    public static ExtendedException of(
-            Throwable cause
-    ) {
+    public static ExtendedException of(Throwable cause) {
         return cause instanceof ExtendedException
                 ? (ExtendedException) cause
                 : new ExtendedException(
-                ExtendedError.UNKNOWN,
-                Map.of("message", cause.getMessage().replace("'", "\""))
+                ExtendedError.UNKNOWN
         );
     }
 }

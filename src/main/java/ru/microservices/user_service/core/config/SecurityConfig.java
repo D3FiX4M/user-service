@@ -14,7 +14,6 @@ public class SecurityConfig extends GrpcSecurityConfigurerAdapter {
 
     private final JwtDecoder jwtDecoder;
 
-
     @Override
     public void configure(GrpcSecurity builder) throws Exception {
         builder
