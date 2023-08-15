@@ -54,4 +54,17 @@ public class UserService {
         return repository.findAllById(ids);
     }
 
+
+    public User validateUser(String email, String password){
+        User user = repository.findByEmail(email)
+                .orElseThrow(
+                        () -> new RuntimeException()
+                );
+
+        if (!passwordEncoder.matches(password, user.getPassword())){
+            throw new RuntimeException();
+        }
+
+        return user;
+    }
 }

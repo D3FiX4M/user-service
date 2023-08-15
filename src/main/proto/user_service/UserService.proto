@@ -10,15 +10,16 @@ import "google/protobuf/empty.proto";
 import "user_service/request/CreateUserRequest.proto";
 import "user_service/request/UserIdRequest.proto";
 import "user_service/request/UserMultipleIdRequest.proto";
+import "user_service/request/ValidateUserRequest.proto";
 
 // RESPONSES
 import "user_service/response/UserResponse.proto";
 import "user_service/response/UserMultipleResponse.proto";
 
-
 service UserService{
   rpc create(CreateUserRequest) returns (UserResponse){}
   rpc getUser(UserIdRequest) returns (UserResponse){}
   rpc getUsers(UserMultipleIdRequest) returns (UserMultipleResponse){}
+  rpc validateUserByUsername(ValidateUserRequest) returns (UserResponse){}
 }
 

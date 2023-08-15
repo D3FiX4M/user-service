@@ -51,4 +51,17 @@ public class UserGrpc extends UserServiceGrpc.UserServiceImplBase {
                 )
         );
     }
+
+    @Override
+    public void validateUserByUsername(ValidateUserRequest request, StreamObserver<UserResponse> responseObserver) {
+        StreamObserverUtils.actionValue(
+                responseObserver,
+                ()-> mapper.toUserResponse(
+                        service.validateUser(
+                                request.getEmail(),
+                                request.getPassword()
+                        )
+                )
+        );
+    }
 }
