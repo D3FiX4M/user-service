@@ -10,13 +10,6 @@ databaseChangeLog:
             maxValue: 9223372036854775807
             cycle: false
 
-        - createSequence:
-            sequenceName: role_sequence
-            incrementBy: 1
-            startValue: 3
-            maxValue: 9223372036854775807
-            cycle: false
-
         - createTable:
             tableName: users
             columns:
@@ -29,7 +22,7 @@ databaseChangeLog:
                     unique: true
                     nullable: false
               - column:
-                  name: username
+                  name: email
                   type: text
                   constraints:
                     nullable: false
@@ -39,54 +32,12 @@ databaseChangeLog:
                   type: text
                   constraints:
                     nullable: false
-
-        - createTable:
-            tableName: roles
-            columns:
-              - column:
-                  name: id
-                  type: bigint
-                  defaultValueComputed: "nextval('role_sequence')"
-                  constraints:
-                    primaryKey: true
-                    unique: true
-                    nullable: false
-              - column:
-                  name: key
-                  type: TEXT
-                  constraints:
-                    nullable: false
-
-        - createTable:
-            tableName: user_roles
-            columns:
-              - column:
-                  name: user_id
-                  type: bigint
-                  constraints:
-                    primaryKey: true
-                    nullable: false
               - column:
                   name: role_id
                   type: bigint
                   constraints:
-                    primaryKey: true
                     nullable: false
 
-
-        - addForeignKeyConstraint:
-            baseTableName: user_roles
-            referencedTableName: users
-            baseColumnNames: user_id
-            referencedColumnNames: id
-            constraintName: fkc_user_roles_users
-
-        - addForeignKeyConstraint:
-            baseTableName: user_roles
-            referencedTableName: roles
-            baseColumnNames: role_id
-            referencedColumnNames: id
-            constraintName: fkc_user_roles_roles
 
 
 

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import ru.microservices.user_service.UserModel;
 import ru.microservices.user_service.UserMultipleResponse;
 import ru.microservices.user_service.UserResponse;
-import ru.microservices.user_service.ValidateUserResponse;
 import ru.microservices.user_service.domain.entity.User;
 
 import java.util.List;
@@ -14,18 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserMapper {
 
-    private final RoleMapper roleMapper;
-
     private UserModel toUserModel(User user) {
         return UserModel.newBuilder()
                 .setId(user.getId())
-                .setUsername(user.getUsername())
-                .addAllRoles(
-                        user.getRoles()
-                                .stream()
-                                .map(roleMapper::toRoleModel)
-                                .toList()
-                )
+                .setEmail(user.getEmail())
+                .setRoleId(user.getRoleId())
                 .build();
     }
 
@@ -46,9 +38,4 @@ public class UserMapper {
                 .build();
     }
 
-    public ValidateUserResponse toValidateUserResponse(Boolean value) {
-        return ValidateUserResponse.newBuilder()
-                .setValue(value)
-                .build();
-    }
 }

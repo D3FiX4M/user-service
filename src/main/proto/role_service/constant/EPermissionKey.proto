@@ -1,0 +1,10 @@
+syntax = "proto3";
+package ru.microservices.role_service;
+option java_multiple_files = true;
+
+enum EPermissionKey{
+  GET = 0;
+  CREATE =1;
+  UPDATE = 2;
+  DELETE = 3;
+}

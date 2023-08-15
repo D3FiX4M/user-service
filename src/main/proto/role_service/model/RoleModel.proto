@@ -1,0 +1,12 @@
+syntax = "proto3";
+package ru.microservices.role_service;
+option java_multiple_files = true;
+
+import "role_service/model/PermissionModel.proto";
+
+message RoleModel{
+  int64 id = 1;
+  string name = 2;
+  repeated PermissionModel permissions = 3;
+  bool is_default = 4;
+}

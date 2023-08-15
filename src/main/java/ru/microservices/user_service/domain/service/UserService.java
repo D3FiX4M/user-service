@@ -1,15 +1,12 @@
 package ru.microservices.user_service.domain.service;
 
+import com.google.protobuf.Empty;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.microservices.user_service.ERoleKey;
 import ru.microservices.user_service.core.exception.ExtendedError;
 import ru.microservices.user_service.core.exception.ExtendedException;
-import ru.microservices.user_service.domain.entity.Role;
+import ru.microservices.user_service.core.external.role_service.RoleService;
 import ru.microservices.user_service.domain.entity.User;
 import ru.microservices.user_service.domain.repository.UserRepository;
 
@@ -18,55 +15,43 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
 
-    private final UserRepository repository;
     private final RoleService roleService;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public User create(String username, String password) {
-        if (repository.existsByUsername(username)) {
+    public User create(String email, String password) {
+
+        if (repository.existsByEmail(email)) {
             throw ExtendedException.of(ExtendedError.ALREADY_EXIST);
         }
-        List<Role> roles = List.of(
-                roleService.getByKey(ERoleKey.USER)
-        );
+
+        Long roleId = roleService.defaultBlockingStub()
+                .getRoleByDefault(
+                        Empty.newBuilder()
+                                .build())
+                .getRole().getId();
+
         return repository.save(
                 new User(
                         null,
-                        username,
+                        email,
                         passwordEncoder.encode(password),
-                        roles
+                        roleId
                 )
         );
     }
 
-    public User getById(Long id) {
+    public User getUser(Long id) {
         return repository.findById(id)
                 .orElseThrow(
                         () -> ExtendedException.of(ExtendedError.NOT_FOUND)
                 );
     }
 
-    public List<User> getByIds(Collection<Long> ids) {
+    public List<User> getUsers(Collection<Long> ids) {
         return repository.findAllById(ids);
     }
 
-    public List<User> getAll() {
-        return repository.findAll();
-    }
-
-    public Boolean validateUser(String username, String password) {
-        User user = loadUserByUsername(username);
-        return passwordEncoder.matches(password, user.getPassword());
-    }
-
-
-    @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username)
-                .orElseThrow(
-                        () -> ExtendedException.of(ExtendedError.NOT_FOUND)
-                );
-    }
 }

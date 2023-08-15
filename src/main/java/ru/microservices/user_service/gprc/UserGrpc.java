@@ -1,21 +1,19 @@
 package ru.microservices.user_service.gprc;
 
-import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
-import org.lognet.springboot.grpc.GRpcService;
+import org.springframework.stereotype.Component;
 import ru.microservices.user_service.*;
 import ru.microservices.user_service.domain.mapper.UserMapper;
 import ru.microservices.user_service.domain.service.UserService;
 import ru.microservices.user_service.util.StreamObserverUtils;
 
-@GRpcService
+@Component
 @RequiredArgsConstructor
 public class UserGrpc extends UserServiceGrpc.UserServiceImplBase {
 
     private final UserService service;
     private final UserMapper mapper;
-
 
     @Override
     public void create(CreateUserRequest request, StreamObserver<UserResponse> responseObserver) {
@@ -23,7 +21,7 @@ public class UserGrpc extends UserServiceGrpc.UserServiceImplBase {
                 responseObserver,
                 () -> mapper.toUserResponse(
                         service.create(
-                                request.getUsername(),
+                                request.getEmail(),
                                 request.getPassword()
                         )
                 )
@@ -31,11 +29,11 @@ public class UserGrpc extends UserServiceGrpc.UserServiceImplBase {
     }
 
     @Override
-    public void getById(UserIdRequest request, StreamObserver<UserResponse> responseObserver) {
+    public void getUser(UserIdRequest request, StreamObserver<UserResponse> responseObserver) {
         StreamObserverUtils.actionValue(
                 responseObserver,
                 () -> mapper.toUserResponse(
-                        service.getById(
+                        service.getUser(
                                 request.getId()
                         )
                 )
@@ -43,47 +41,12 @@ public class UserGrpc extends UserServiceGrpc.UserServiceImplBase {
     }
 
     @Override
-    public void getByIds(UserIdMultipleRequest request, StreamObserver<UserMultipleResponse> responseObserver) {
+    public void getUsers(UserMultipleIdRequest request, StreamObserver<UserMultipleResponse> responseObserver) {
         StreamObserverUtils.actionValue(
                 responseObserver,
                 () -> mapper.toUserMultipleResponse(
-                        service.getByIds(
+                        service.getUsers(
                                 request.getIdList()
-                        )
-                )
-        );
-    }
-
-    @Override
-    public void getAllUser(Empty request, StreamObserver<UserMultipleResponse> responseObserver) {
-        StreamObserverUtils.actionValue(
-                responseObserver,
-                () -> mapper.toUserMultipleResponse(
-                        service.getAll()
-                )
-        );
-    }
-
-    @Override
-    public void getUserByUsername(UserUsernameRequest request, StreamObserver<UserResponse> responseObserver) {
-        StreamObserverUtils.actionValue(
-                responseObserver,
-                () -> mapper.toUserResponse(
-                        service.loadUserByUsername(
-                                request.getUsername()
-                        )
-                )
-        );
-    }
-
-    @Override
-    public void validateUser(ValidateUserRequest request, StreamObserver<ValidateUserResponse> responseObserver) {
-        StreamObserverUtils.actionValue(
-                responseObserver,
-                () -> mapper.toValidateUserResponse(
-                        service.validateUser(
-                                request.getUsername(),
-                                request.getPassword()
                         )
                 )
         );

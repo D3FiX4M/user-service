@@ -1,0 +1,12 @@
+syntax = "proto3";
+package ru.microservices.role_service;
+option java_multiple_files = true;
+
+import "role_service/constant/EPermissionKey.proto";
+import "role_service/constant/EPermissionPrefix.proto";
+
+message PermissionModel{
+  int64 id = 1;
+  EPermissionPrefix prefix = 2;
+  EPermissionKey key = 3;
+}

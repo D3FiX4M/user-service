@@ -1,8 +1,7 @@
 syntax = "proto3";
-package ru.microservices.user_service;
+package ru.microservices.role_service;
 option java_multiple_files = true;
 
-
-message UserIdMultipleRequest{
+message RoleMultipleIdRequest{
   repeated int64 id = 1;
 }

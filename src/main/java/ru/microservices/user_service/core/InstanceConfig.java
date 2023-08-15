@@ -1,4 +1,4 @@
-package ru.microservices.user_service.core.config;
+package ru.microservices.user_service.core;
 
 import lombok.Getter;
 import lombok.Setter;

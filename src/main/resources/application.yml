@@ -38,24 +38,19 @@ server:
 
 # GRPC CONFIG
 grpc:
-  port: 6060
-  security:
-    auth:
-      enabled: true
-  enable-reflection: true
+  server:
+    port: 6060
   client:
     authentication-service:
       address: localhost
       port: 6061
+    role-service:
 
 # INSTANCE CONFIG
 instance:
   key: "user-service"
   id: 1
 
-# JWT CONFIG
-jwt:
-  key: 702ECF979164043FF68BD276F95409E6DC10167123D967F0AB78FA8DBCA02062
 
 
 

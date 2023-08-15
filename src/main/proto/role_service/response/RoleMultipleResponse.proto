@@ -1,0 +1,9 @@
+syntax = "proto3";
+package ru.microservices.role_service;
+option java_multiple_files = true;
+
+import "role_service/model/RoleModel.proto";
+
+message RoleMultipleResponse{
+  repeated RoleModel roles =1;
+}

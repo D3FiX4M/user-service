@@ -1,0 +1,7 @@
+syntax = "proto3";
+package ru.microservices.role_service;
+option java_multiple_files = true;
+
+enum EPermissionPrefix{
+  SKUD = 0;
+}

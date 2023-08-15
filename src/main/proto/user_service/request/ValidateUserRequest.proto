@@ -1,8 +1,0 @@
-syntax = "proto3";
-package ru.microservices.user_service;
-option java_multiple_files = true;
-
-message ValidateUserRequest{
-  string username = 1;
-  string password = 2;
-}

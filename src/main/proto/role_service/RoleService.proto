@@ -1,0 +1,32 @@
+syntax = "proto3";
+package ru.microservices.role_service;
+option java_multiple_files = true;
+
+// COMMON
+import "google/protobuf/empty.proto";
+
+
+// REQUESTS
+import "role_service/request/CreateRoleRequest.proto";
+import "role_service/request/RoleIdRequest.proto";
+import "role_service/request/RoleMultipleIdRequest.proto";
+import "role_service/request/UpdateRoleRequest.proto";
+import "role_service/request/PermissionByPrefixRequest.proto";
+
+// RESPONSES
+import "role_service/response/RoleMultipleResponse.proto";
+import "role_service/response/RoleResponse.proto";
+import "role_service/response/PermissionMultipleResponse.proto";
+
+
+service RoleService{
+  rpc createRole(CreateRoleRequest) returns (google.protobuf.Empty){}
+  rpc getRole(RoleIdRequest) returns (RoleResponse){}
+  rpc getRoles(RoleMultipleIdRequest) returns (RoleMultipleResponse){}
+  rpc getRoleByDefault(google.protobuf.Empty) returns(RoleResponse){}
+  rpc updateRole(UpdateRoleRequest) returns (google.protobuf.Empty){}
+  rpc deleteRoles(RoleMultipleIdRequest) returns (google.protobuf.Empty){}
+
+  rpc getPermissions(google.protobuf.Empty) returns (PermissionMultipleResponse){}
+  rpc getPermissionByPrefix(PermissionByPrefixRequest) returns (PermissionMultipleResponse){}
+}
