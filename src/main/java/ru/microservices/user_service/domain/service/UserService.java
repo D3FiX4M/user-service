@@ -37,7 +37,6 @@ public class UserService {
                         null,
                         email,
                         EncoderUtils
-                                .passwordEncoder()
                                 .encode(password),
                         roleId
                 )
@@ -63,8 +62,7 @@ public class UserService {
                 );
 
         if (!EncoderUtils
-                .passwordEncoder()
-                .matches(
+                .verify(
                         password,
                         user.getPassword()
                 )
