@@ -34,17 +34,16 @@ logging:
 
 # SERVER CONFIG
 server:
-  port: 8080
+  port: 8081
 
 # GRPC CONFIG
 grpc:
   server:
-    port: 6060
+    port: 9091
   client:
-    authentication-service:
-      address: localhost
-      port: 6061
     role-service:
+      address: localhost
+      port: 9093
 
 # INSTANCE CONFIG
 instance:

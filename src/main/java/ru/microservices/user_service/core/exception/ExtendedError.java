@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 public enum ExtendedError {
 
     // COMMON
-    UNKNOWN(Status.INTERNAL, HttpStatus.INTERNAL_SERVER_ERROR),
+    INTERNAL(Status.INTERNAL, HttpStatus.INTERNAL_SERVER_ERROR),
     NOT_FOUND(Status.NOT_FOUND, HttpStatus.NOT_FOUND),
     BAD_REQUEST(Status.INVALID_ARGUMENT, HttpStatus.BAD_REQUEST),
     PARSER_ERROR(Status.INVALID_ARGUMENT, HttpStatus.BAD_REQUEST),

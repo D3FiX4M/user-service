@@ -15,12 +15,11 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExtendedExceptionBody {
-    private String exceptionName;
     private String grpcStatus;
     private HttpStatus httpStatus;
     private String errorMessage;
-    private String requestBody;
     private String methodName;
+    private String requestBody;
     private LocalDateTime timestamp;
     private StackTraceElement[] stackTrace;
 
@@ -29,7 +28,6 @@ public class ExtendedExceptionBody {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("EXCEPTION NAME: ").append("[ ").append(exceptionName).append(" ]").append(System.lineSeparator());
         sb.append("GRPC STATUS: ").append("[ ").append(grpcStatus).append(" ]").append(System.lineSeparator());
         sb.append("HTTP STATUS: ").append("[ ").append(httpStatus).append(" ]").append(System.lineSeparator());
         sb.append("ERROR MESSAGE: ").append("[ ").append(errorMessage).append(" ]").append(System.lineSeparator());

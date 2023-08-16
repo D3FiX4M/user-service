@@ -44,9 +44,13 @@ public class UserService {
     }
 
     public User getUser(Long id) {
+//        return repository.findById(id)
+//                .orElseThrow(
+//                        () -> ExtendedException.of(ExtendedError.NOT_FOUND)
+//                );
         return repository.findById(id)
                 .orElseThrow(
-                        () -> ExtendedException.of(ExtendedError.NOT_FOUND)
+                        () -> new RuntimeException("check")
                 );
     }
 

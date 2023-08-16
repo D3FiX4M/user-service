@@ -7,4 +7,5 @@ message ValidateTokenResponse{
   int64 user_id = 1;
   bool is_expired = 2;
   string expired_at = 3;
+  string created_at = 4;
 }

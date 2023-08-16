@@ -6,5 +6,5 @@ import "role_service/model/PermissionModel.proto";
 
 message CreateRoleRequest{
   string name = 1;
-  repeated PermissionModel permissions = 2;
+  repeated int64 permission_ids = 2;
 }
