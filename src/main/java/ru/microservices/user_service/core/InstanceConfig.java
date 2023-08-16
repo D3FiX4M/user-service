@@ -9,9 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 @Configuration
+@ConfigurationProperties(prefix = "instance")
 public class InstanceConfig {
-	@Value("${instance.key}")
 	private String key;
-	@Value("${instance.id}")
 	private String id;
 }

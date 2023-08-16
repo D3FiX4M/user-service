@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties("grpc.client.role-service")
+@ConfigurationProperties(prefix = "grpc.client.role-service")
 public class RoleServiceConfig {
     private String address;
     private Integer port;
