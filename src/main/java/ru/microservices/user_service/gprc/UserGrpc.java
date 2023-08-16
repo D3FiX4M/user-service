@@ -53,7 +53,7 @@ public class UserGrpc extends UserServiceGrpc.UserServiceImplBase {
     }
 
     @Override
-    public void validateUserByUsername(ValidateUserRequest request, StreamObserver<UserResponse> responseObserver) {
+    public void validateUser(ValidateUserRequest request, StreamObserver<UserResponse> responseObserver) {
         StreamObserverUtils.actionValue(
                 responseObserver,
                 ()-> mapper.toUserResponse(

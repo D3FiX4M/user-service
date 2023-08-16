@@ -20,6 +20,6 @@ service UserService{
   rpc create(CreateUserRequest) returns (UserResponse){}
   rpc getUser(UserIdRequest) returns (UserResponse){}
   rpc getUsers(UserMultipleIdRequest) returns (UserMultipleResponse){}
-  rpc validateUserByUsername(ValidateUserRequest) returns (UserResponse){}
+  rpc validateUser(ValidateUserRequest) returns (UserResponse){}
 }
 

@@ -2,13 +2,13 @@ package ru.microservices.user_service.domain.service;
 
 import com.google.protobuf.Empty;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.microservices.user_service.core.exception.ExtendedError;
 import ru.microservices.user_service.core.exception.ExtendedException;
 import ru.microservices.user_service.core.external.role_service.RoleService;
 import ru.microservices.user_service.domain.entity.User;
 import ru.microservices.user_service.domain.repository.UserRepository;
+import ru.microservices.user_service.util.EncoderUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +19,6 @@ public class UserService {
 
     private final RoleService roleService;
     private final UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
 
     public User create(String email, String password) {
 
@@ -37,7 +36,9 @@ public class UserService {
                 new User(
                         null,
                         email,
-                        passwordEncoder.encode(password),
+                        EncoderUtils
+                                .passwordEncoder()
+                                .encode(password),
                         roleId
                 )
         );
@@ -55,13 +56,19 @@ public class UserService {
     }
 
 
-    public User validateUser(String email, String password){
+    public User validateUser(String email, String password) {
         User user = repository.findByEmail(email)
                 .orElseThrow(
                         () -> new RuntimeException()
                 );
 
-        if (!passwordEncoder.matches(password, user.getPassword())){
+        if (!EncoderUtils
+                .passwordEncoder()
+                .matches(
+                        password,
+                        user.getPassword()
+                )
+        ) {
             throw new RuntimeException();
         }
 
