@@ -3,8 +3,8 @@ package ru.microservices.user_service.domain.service;
 import com.google.protobuf.Empty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.microservices.user_service.core.exception.ExtendedError;
-import ru.microservices.user_service.core.exception.ExtendedException;
+import ru.microservices.user_service.core.exception.GrpcError;
+import ru.microservices.user_service.core.exception.GrpcException;
 import ru.microservices.user_service.core.external.role_service.RoleService;
 import ru.microservices.user_service.domain.entity.User;
 import ru.microservices.user_service.domain.repository.UserRepository;
@@ -23,7 +23,7 @@ public class UserService {
     public User create(String email, String password) {
 
         if (repository.existsByEmail(email)) {
-            throw ExtendedException.of(ExtendedError.ALREADY_EXIST);
+            throw GrpcException.of(GrpcError.ALREADY_EXIST);
         }
 
         Long roleId = roleService.defaultBlockingStub()

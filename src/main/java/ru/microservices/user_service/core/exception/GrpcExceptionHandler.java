@@ -7,13 +7,18 @@ import io.grpc.protobuf.StatusProto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.microservices.user_service.core.InstanceConfig;
+import ru.microservices.user_service.util.DatePatterns;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class ExtendedServerExceptionHandler implements ServerInterceptor {
+public class GrpcExceptionHandler implements ServerInterceptor {
 
     private final InstanceConfig instanceConfig;
 
@@ -21,7 +26,8 @@ public class ExtendedServerExceptionHandler implements ServerInterceptor {
     public <T, R> ServerCall.Listener<T> interceptCall(
             ServerCall<T, R> serverCall, Metadata headers, ServerCallHandler<T, R> serverCallHandler) {
         ServerCall.Listener<T> delegate = serverCallHandler.startCall(serverCall, headers);
-        return new ExceptionHandler<>(delegate, serverCall, instanceConfig);
+        return new ExceptionHandler<>(delegate, serverCall,
+                instanceConfig);
     }
 
     private static class ExceptionHandler<T, R>
@@ -33,7 +39,10 @@ public class ExtendedServerExceptionHandler implements ServerInterceptor {
 
 
         ExceptionHandler(
-                ServerCall.Listener<T> listener, ServerCall<T, R> serverCall, InstanceConfig instanceConfig) {
+                ServerCall.Listener<T> listener,
+                ServerCall<T, R> serverCall,
+                InstanceConfig instanceConfig
+        ) {
             super(listener);
             this.delegate = serverCall;
             this.instanceConfig = instanceConfig;
@@ -53,32 +62,32 @@ public class ExtendedServerExceptionHandler implements ServerInterceptor {
         private void handleException(
                 RuntimeException exception,
                 ServerCall<T, R> serverCall) {
-            // Catch specific Exception and Process
 
-            Status status = null;
-            Metadata headers = null;
+            Status status;
+            Metadata headers;
 
             if (exception instanceof StatusRuntimeException) {
 
-                com.google.rpc.Status extractedStatus = StatusProto.fromThrowable(exception);
+                StatusRuntimeException statusRuntimeException = (StatusRuntimeException) exception;
+                com.google.rpc.Status extractedStatus = StatusProto.fromThrowable(statusRuntimeException);
 
                 if (extractedStatus != null) {
 
                     List<Any> detailsList = new ArrayList<>(extractedStatus.getDetailsList());
 
 
-                    ExtendedError extendedError = ExtendedError.INTERNAL;
+                    GrpcError grpcError = GrpcError.INTERNAL;
 
                     Map<String, String> metaData = fillMetaData(
-                            extendedError,
-                            exception,
+                            grpcError,
+                            statusRuntimeException,
                             serverCall
                     );
 
 
                     ErrorInfo errorInfo = fillNewErrorInfo(
                             metaData,
-                            extendedError
+                            grpcError
                     );
 
 
@@ -88,7 +97,7 @@ public class ExtendedServerExceptionHandler implements ServerInterceptor {
 
                     com.google.rpc.Status newStatus = extractedStatus.toBuilder()
                             .setCode(
-                                    extendedError
+                                    grpcError
                                             .getGrpcStatus()
                                             .getCode()
                                             .value()
@@ -97,38 +106,38 @@ public class ExtendedServerExceptionHandler implements ServerInterceptor {
                             .addAllDetails(detailsList)
                             .build();
 
-                    var statusRuntimeException = StatusProto.toStatusRuntimeException(newStatus);
-                    status = statusRuntimeException.getStatus();
-                    headers = statusRuntimeException.getTrailers();
+                    statusRuntimeException = StatusProto.toStatusRuntimeException(newStatus);
                 }
+
+                status = statusRuntimeException.getStatus();
+                headers = statusRuntimeException.getTrailers();
 
             } else {
 
-                ExtendedException extendedException;
+                GrpcException grpcException;
 
-                if (exception instanceof ExtendedException) {
-                    extendedException = (ExtendedException) exception;
+                if (exception instanceof GrpcException) {
+                    grpcException = (GrpcException) exception;
                 } else {
-                    extendedException = ExtendedException.of(exception);
+                    grpcException = GrpcException.of(exception);
                 }
 
-                ExtendedError extendedError = extendedException.getError();
+                GrpcError grpcError = grpcException.getError();
 
                 Map<String, String> metaData = fillMetaData(
-                        extendedError,
-                        extendedException,
+                        grpcError,
+                        grpcException,
                         serverCall
                 );
 
                 ErrorInfo errorInfo = fillNewErrorInfo(
                         metaData,
-                        extendedError
+                        grpcError
                 );
-
 
                 com.google.rpc.Status newStatus = com.google.rpc.Status.newBuilder()
                         .setCode(
-                                extendedError
+                                grpcError
                                         .getGrpcStatus()
                                         .getCode()
                                         .value()
@@ -137,12 +146,11 @@ public class ExtendedServerExceptionHandler implements ServerInterceptor {
                         .build();
 
 
-                var statusRuntimeException = StatusProto.toStatusRuntimeException(newStatus);
+                StatusRuntimeException statusRuntimeException = StatusProto.toStatusRuntimeException(newStatus);
 
                 status = Status.fromThrowable(statusRuntimeException);
                 headers = statusRuntimeException.getTrailers();
             }
-
 
             serverCall.close(status, headers);
         }
@@ -150,20 +158,20 @@ public class ExtendedServerExceptionHandler implements ServerInterceptor {
 
         private ErrorInfo fillNewErrorInfo(
                 Map<String, String> metadata,
-                ExtendedError extendedError
+                GrpcError grpcError
         ) {
 
             return
                     ErrorInfo.newBuilder()
                             .setReason(
-                                    extendedError
+                                    grpcError
                                             .name()
                             )
                             .setDomain(
-                                    Map.of(
-                                            "ID", instanceConfig.getId(),
-                                            "KEY", instanceConfig.getKey()
-                                    ).toString()
+                                    String.format("ID: %s | KEY: %s",
+                                            instanceConfig.getId(),
+                                            instanceConfig.getKey()
+                                    )
                             )
                             .putAllMetadata(metadata)
                             .build();
@@ -171,30 +179,61 @@ public class ExtendedServerExceptionHandler implements ServerInterceptor {
         }
 
         private Map<String, String> fillMetaData(
-                ExtendedError error,
+                GrpcError error,
                 Exception exception,
                 ServerCall<T, R> serverCall) {
 
-            Map<String, String> map = new HashMap<>();
-
-            map.put("grpcStatus", error.getGrpcStatus().getCode().name());
-            map.put("httpStatus", error.getHttpStatus().name());
+            Map<String, String> map = new LinkedHashMap<>();
 
             map.put(
-                    "description",
+                    EMetadataKey.STATUS.name(),
+                    error
+                            .getGrpcStatus()
+                            .getCode()
+                            .name()
+            );
+            map.put(
+                    EMetadataKey.DESCRIPTION.name(),
                     exception.getMessage() != null
-                            && !exception.getMessage().isEmpty()
                             && !exception.getMessage().endsWith(": ")
                             ? exception.getMessage()
-                            : "");
+                            : ""
+            );
 
-            map.put("methodName", serverCall.getMethodDescriptor().getFullMethodName());
-            map.put("time", LocalDateTime.now().toString());
-            map.put("stackTrace", Arrays.toString(exception.getStackTrace()));
+            map.put(EMetadataKey.METHOD_NAME.name(),
+                    serverCall
+                            .getMethodDescriptor()
+                            .getFullMethodName()
+            );
+            map.put(
+                    EMetadataKey.TIME.name(),
+                    LocalDateTime.now()
+                            .format(
+                                    DateTimeFormatter
+                                            .ofPattern(
+                                                    DatePatterns.DATE_TIME
+                                            )
+                            )
+            );
+            map.put(EMetadataKey.STACKTRACE.name(),
+                    convertStackTraceToReadable(
+                            exception.getStackTrace()
+                    )
+            );
 
             return map;
         }
 
+        private String convertStackTraceToReadable(StackTraceElement[] stackTraceElements) {
+            final Map<String, String> data = new LinkedHashMap<>();
+            for (int i = 0; i < stackTraceElements.length; i++) {
+                data.put(
+                        String.valueOf(i),
+                        stackTraceElements[i].toString()
+                );
+            }
 
+            return data.toString();
+        }
     }
 }

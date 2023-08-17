@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import ru.microservices.user_service.core.exception.ExtendedServerExceptionHandler;
+import ru.microservices.user_service.core.exception.GrpcExceptionHandler;
 
 import java.io.IOException;
 
@@ -18,7 +18,7 @@ import java.io.IOException;
 @Configuration
 @RequiredArgsConstructor
 public class GrpcConfig {
-	private final ExtendedServerExceptionHandler exceptionHandler;
+	private final GrpcExceptionHandler exceptionHandler;
 
 	@Bean
 	public Server grpcServer(ApplicationContext context, Environment env) throws IOException {
